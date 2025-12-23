@@ -1,0 +1,15 @@
+# Project
+node_modules/
+
+# TypeScript
+lib/**/*.js
+lib/**/*.d.ts
+
+#IntelliJ IDEA:
+.idea
+*.iml
+
+# Yarn:
+.pnp.*
+.yarn
+yarn-error.log
