@@ -33,7 +33,7 @@
 		"@types/node": "^25.0.3",
 		"chai": "^6.0.1",
 		"del-cli": "^6.0.0",
-		"file-type": "^21.1.1",
+		"file-type": "^21.3.0",
 		"mocha": "^11.7.1",
 		"typescript": "^5.9.3"
 	},
