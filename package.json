@@ -22,7 +22,8 @@
 		"detection",
 		"doc",
 		"xls",
-		"ppt"
+		"ppt",
+		"msi"
 	],
 	"dependencies": {
 		"sax": "^1.4.1",
@@ -48,7 +49,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Borewit/file-type-xml.git"
+		"url": "git+https://github.com/Borewit/file-type-cfbf.git"
 	},
 	"license": "MIT",
 	"packageManager": "yarn@4.9.1"
