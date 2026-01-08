@@ -71,5 +71,19 @@ describe('CFBF detector', () => {
 
 	});
 
+	it('should detect .msi', async () => {
+		const samplePath = getSamplePath('fixture.msi');
+		const tokenizer = await fromFile(samplePath);
+		try {
+			const fileType = await detectCfbf.detect(tokenizer);
+			assert.isDefined(fileType, 'should detect the file type');
+			assert.strictEqual(fileType.mime, 'application/x-msi');
+			assert.strictEqual(fileType.ext, 'msi');
+		} finally {
+			await tokenizer.close();
+		}
+
+	});
+
 });
 

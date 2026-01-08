@@ -105,6 +105,15 @@ export const detectCfbf: Detector = {
 			return { ext: 'ppt', mime: 'application/vnd.ms-powerpoint' }
 		}
 
+		// CLSID for .msi files: {000C1084-0000-0000-C000-000000000046}
+		const msiClsid = [
+			0x84, 0x10, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+			0x46
+		]
+		if (checkClsid(msiClsid)) {
+			return { ext: 'msi', mime: 'application/x-msi' }
+		}
+
 		return undefined
 	}
 };

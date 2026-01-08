@@ -38,6 +38,9 @@ These are pre-Office Open XML formats, typically used by Office 97–2003:
 - `.xls` Microsoft Excel spreadsheet
 - `.ppt` Microsoft PowerPoint presentation
 
+Other files:
+- `.msi`  [Windows installer files](https://en.wikipedia.org/wiki/Windows_Installer)
+
 ## Licence
 
 This project is licensed under the [MIT License](LICENSE.txt). Feel free to use, modify, and distribute as needed.
