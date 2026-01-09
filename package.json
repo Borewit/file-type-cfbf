@@ -1,6 +1,6 @@
 {
 	"name": "@file-type/cfbf",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Compound File Binary Format (CFBF) detection plugin for file-type",
 	"type": "module",
 	"types": "./lib/index.d.ts",
