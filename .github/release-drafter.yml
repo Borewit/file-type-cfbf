@@ -48,4 +48,4 @@ template: |
   $CHANGES
 
   ## NPM release
-  NPM release: [@file-type/xml@$RESOLVED_VERSION](https://www.npmjs.com/package/@file-type/xml/v/$RESOLVED_VERSION)
+  NPM release: [@file-type/cfbf@$RESOLVED_VERSION](https://www.npmjs.com/package/@file-type/cfbf/v/$RESOLVED_VERSION)
