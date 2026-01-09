@@ -1,5 +1,9 @@
 import type { ITokenizer } from 'strtok3';
 import type { Detector, FileTypeResult } from 'file-type';
+import { CFBF_CLSIDS } from './clsid.js';
+import { Guid } from './guid.js';
+
+const guidCache = new Map<string, Guid>();
 
 export const detectCfbf: Detector = {
 	id: 'cfbf',
@@ -16,20 +20,20 @@ export const detectCfbf: Detector = {
 
 		// Need at least 52 bytes to read required header fields
 		if (headerBytesRead < 52) {
-			return undefined
+			return undefined;
 		}
 
 		// Check CFBF signature
 		if (!cfbfSignature.every((value, index) => value === headerBuffer[index])) {
-			return undefined
+			return undefined;
 		}
 
 		// Validate sector shift (offset 30): must be 9 (512-byte sectors) or 12 (4096-byte sectors)
 		const sectorShift = headerBuffer[30]
 		if (sectorShift !== 9 && sectorShift !== 12) {
-			return undefined
+			return undefined;
 		}
-		const sectorSize = 1 << sectorShift
+		const sectorSize = 1 << sectorShift;
 
 		// Read _sectDirStart (offset 48-51, little-endian unsigned 32-bit)
 		// This is the sector number of the first directory sector
@@ -46,74 +50,49 @@ export const detectCfbf: Detector = {
 		// ENDOFCHAIN (0xFFFFFFFE) = end of sector chain
 		// FREESECT (0xFFFFFFFF) = unallocated sector
 		if (sectDirStart >= 0xfffffffe) {
-			return undefined
+			return undefined;
 		}
 
 		// Calculate CLSID location in file:
 		// - 512 bytes for header
 		// - sectDirStart * sectorSize to reach directory sector
 		// - 80 bytes offset to CLSID within root directory entry
-		const clsidOffset = 512 + sectDirStart * sectorSize + 80
-		const requiredLength = clsidOffset + 16
+		const clsidOffset = 512 + sectDirStart * sectorSize + 80;
+		const requiredLength = clsidOffset + 16;
 
 		// Read enough bytes to reach the CLSID
 		const buffer = new Uint8Array(requiredLength)
 		const bytesRead = await tokenizer.peekBuffer(buffer, {
 			length: requiredLength,
 			mayBeLess: true
-		})
+		});
 
 		// Verify we read enough bytes
 		if (bytesRead < requiredLength) {
-			return undefined
+			return undefined;
 		}
 
-		// Helper to check CLSID at the calculated offset
-		const checkClsid = (clsid: number[]) =>
-			clsid.every((value, i) => value === buffer[clsidOffset + i])
-
-		// CLSID for .doc files: {00020906-0000-0000-C000-000000000046}
-		const docClsid = [
-			0x06, 0x09, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			0x46
-		]
-		if (checkClsid(docClsid)) {
-			return { ext: 'doc', mime: 'application/msword' }
+		// Retrieves and caches GUIDs
+		function getGuid(clsid: string): Guid {
+			let guid = guidCache.get(clsid);
+			if (!guid) {
+				guid = Guid.fromString(clsid);
+				guidCache.set(clsid, guid);
+			}
+			return guid;
 		}
 
-		// CLSIDs for .xls files (two variants):
-		// {00020810-0000-0000-C000-000000000046}
-		// {00020820-0000-0000-C000-000000000046}
-		const xlsClsid1 = [
-			0x10, 0x08, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			0x46
-		]
-		const xlsClsid2 = [
-			0x20, 0x08, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			0x46
-		]
-		if (checkClsid(xlsClsid1) || checkClsid(xlsClsid2)) {
-			return { ext: 'xls', mime: 'application/vnd.ms-excel' }
+		// Match against CLSID database
+		for (const record of CFBF_CLSIDS) {
+			const guid = getGuid(record.clsid)
+			if (guid.equals(buffer, clsidOffset)) {
+				return {
+					ext: record.ext,
+					mime: record.mime
+				}
+			}
 		}
 
-		// CLSID for .ppt files: {64818D10-4F9B-11CF-86EA-00AA00B929E8}
-		const pptClsid = [
-			0x10, 0x8d, 0x81, 0x64, 0x9b, 0x4f, 0xcf, 0x11, 0x86, 0xea, 0x00, 0xaa, 0x00, 0xb9, 0x29,
-			0xe8
-		]
-		if (checkClsid(pptClsid)) {
-			return { ext: 'ppt', mime: 'application/vnd.ms-powerpoint' }
-		}
-
-		// CLSID for .msi files: {000C1084-0000-0000-C000-000000000046}
-		const msiClsid = [
-			0x84, 0x10, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			0x46
-		]
-		if (checkClsid(msiClsid)) {
-			return { ext: 'msi', mime: 'application/x-msi' }
-		}
-
-		return undefined
+		return undefined;
 	}
 };
