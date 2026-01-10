@@ -1,7 +1,7 @@
 export class Guid {
 	private readonly bytes: Uint8Array
 
-	private constructor(bytes: Uint8Array) {
+	public constructor(bytes: Uint8Array) {
 		if (bytes.length !== 16) {
 			throw new Error('GUID must be exactly 16 bytes')
 		}

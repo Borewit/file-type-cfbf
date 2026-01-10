@@ -5,9 +5,13 @@ import { Guid } from './guid.js';
 
 const guidCache = new Map<string, Guid>();
 
+export interface NamedFileTypeResult extends FileTypeResult {
+	name: string;
+}
+
 export const detectCfbf: Detector = {
 	id: 'cfbf',
-	detect: async (tokenizer: ITokenizer):  Promise<FileTypeResult | undefined> => {
+	detect: async (tokenizer: ITokenizer):  Promise<NamedFileTypeResult | undefined> => {
 		// CFBF signature: D0 CF 11 E0 A1 B1 1A E1
 		const cfbfSignature = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]
 
@@ -88,7 +92,8 @@ export const detectCfbf: Detector = {
 			if (guid.equals(buffer, clsidOffset)) {
 				return {
 					ext: record.ext,
-					mime: record.mime
+					mime: record.mime,
+					name: record.name
 				}
 			}
 		}

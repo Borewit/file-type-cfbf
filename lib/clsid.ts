@@ -17,6 +17,12 @@ export const CFBF_CLSIDS: readonly CfbfClsidRecord[] = [
 		mime: 'application/msword'
 	},
 	{
+		name: 'Microsoft Word 6-95 Document',
+		clsid: '00020900-0000-0000-c000-000000000046',
+		ext: 'doc',
+		mime: 'application/msword'
+	},
+	{
 		name: 'Microsoft Excel 5-95 Worksheet',
 		clsid: '00020810-0000-0000-c000-000000000046',
 		ext: 'xls',
@@ -31,6 +37,12 @@ export const CFBF_CLSIDS: readonly CfbfClsidRecord[] = [
 	{
 		name: 'Microsoft PowerPoint 97-2003 Presentation (PowerPoint.Show.8)',
 		clsid: '64818d10-4f9b-11cf-86ea-00aa00b929e8',
+		ext: 'ppt',
+		mime: 'application/vnd.ms-powerpoint'
+	},
+	{
+		name: 'Microsoft PowerPoint 4.0 Presentation',
+		clsid: '00044851-0000-0000-c000-000000000046',
 		ext: 'ppt',
 		mime: 'application/vnd.ms-powerpoint'
 	},
