@@ -33,10 +33,12 @@ This detector identifies files that use the [Compound File Binary Format](https:
 
 ### Microsoft Office legacy formats
 
-These are pre-Office Open XML formats, typically used by Office 97–2003:
-- `.doc` Microsoft Word document
-- `.xls` Microsoft Excel spreadsheet
-- `.ppt` Microsoft PowerPoint presentation
+These are pre-Office Open XML binary Office formats (CFBF/OLE),
+used by Microsoft Office prior to Office 2007:
+
+- `.doc` Microsoft Word documents (Word 6.0/95, Word 97–2003)
+- `.xls` Microsoft Excel spreadsheets (Excel 5.0/95, Excel 97–2003)
+- `.ppt` Microsoft PowerPoint presentations (PowerPoint 4.0, 7.0/95, 97–2003)
 
 Other files:
 - `.msi`  [Windows installer files](https://en.wikipedia.org/wiki/Windows_Installer)

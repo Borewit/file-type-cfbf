@@ -87,7 +87,7 @@ describe('CFBF detector', () => {
 		}
 	});
 
-	it('should detect .doc', async () => {
+	it('should detect Microsoft Word 97-2003 Document', async () => {
 		const samplePath = getSamplePath('sample1.doc');
 		const tokenizer = await fromFile(samplePath);
 		try {
@@ -95,12 +95,27 @@ describe('CFBF detector', () => {
 			assert.isDefined(fileType, 'should detect the file type');
 			assert.strictEqual(fileType.mime, 'application/msword');
 			assert.strictEqual(fileType.ext, 'doc');
+			assert.strictEqual(fileType.name, 'Microsoft Word 97-2003 Document (Word.Document.8)');
 		} finally {
 			await tokenizer.close();
 		}
 	});
 
-	it('should detect .xls', async () => {
+	it('should detect Microsoft Microsoft Word 6-95 Document', async () => {
+		const samplePath = getSamplePath('CRED01.DOT');
+		const tokenizer = await fromFile(samplePath);
+		try {
+			const fileType = await detectCfbf.detect(tokenizer);
+			assert.isDefined(fileType, 'should detect the file type');
+			assert.strictEqual(fileType.mime, 'application/msword');
+			assert.strictEqual(fileType.ext, 'doc');
+			assert.strictEqual(fileType.name, 'Microsoft Word 6-95 Document');
+		} finally {
+			await tokenizer.close();
+		}
+	});
+
+	it('should detect Microsoft Excel 97-2003 Worksheet', async () => {
 		const samplePath = getSamplePath('sample1.xls');
 		const tokenizer = await fromFile(samplePath);
 		try {
@@ -108,12 +123,13 @@ describe('CFBF detector', () => {
 			assert.isDefined(fileType, 'should detect the file type');
 			assert.strictEqual(fileType.mime, 'application/vnd.ms-excel');
 			assert.strictEqual(fileType.ext, 'xls');
+			assert.strictEqual(fileType.name, 'Microsoft Excel 97-2003 Worksheet (Excel.Sheet.8)');
 		} finally {
 			await tokenizer.close();
 		}
 	});
 
-	it('should detect .ppt', async () => {
+	it('should detect Microsoft PowerPoint 97-2003 Presentation', async () => {
 		const samplePath = getSamplePath('sample1.ppt');
 		const tokenizer = await fromFile(samplePath);
 		try {
@@ -121,12 +137,13 @@ describe('CFBF detector', () => {
 			assert.isDefined(fileType, 'should detect the file type');
 			assert.strictEqual(fileType.mime, 'application/vnd.ms-powerpoint');
 			assert.strictEqual(fileType.ext, 'ppt');
+			assert.strictEqual(fileType.name, 'Microsoft PowerPoint 97-2003 Presentation (PowerPoint.Show.8)');
 		} finally {
 			await tokenizer.close();
 		}
 	});
 
-	it('should detect .msi', async () => {
+	it('should detect .msi (Windows Installer Package)', async () => {
 		const samplePath = getSamplePath('fixture.msi');
 		const tokenizer = await fromFile(samplePath);
 		try {
@@ -134,6 +151,7 @@ describe('CFBF detector', () => {
 			assert.isDefined(fileType, 'should detect the file type');
 			assert.strictEqual(fileType.mime, 'application/x-msi');
 			assert.strictEqual(fileType.ext, 'msi');
+			assert.strictEqual(fileType.name, 'Windows Installer Package');
 		} finally {
 			await tokenizer.close();
 		}
