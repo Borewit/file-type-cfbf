@@ -47,6 +47,18 @@ export const CFBF_CLSIDS: readonly CfbfClsidRecord[] = [
 		mime: 'application/vnd.ms-powerpoint'
 	},
 	{
+		name: 'Microsoft Visio 2000-2002 Drawing',
+		clsid: '00021a13-0000-0000-c000-000000000046',
+		ext: 'vsd',
+		mime: 'application/vnd.visio'
+	},
+	{
+		name: 'Microsoft Visio 2003-2010 Drawing',
+		clsid: '00021a14-0000-0000-c000-000000000046',
+		ext: 'vsd',
+		mime: 'application/vnd.visio'
+	},
+	{
 		name: 'Windows Installer Package',
 		clsid: '000c1084-0000-0000-c000-000000000046',
 		ext: 'msi',
