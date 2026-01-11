@@ -171,6 +171,34 @@ describe('CFBF detector', () => {
 		}
 	});
 
+	it('should detect Microsoft Publisher 5.0/98', async () => {
+		const samplePath = getSamplePath('ZMSPUB.PUB');
+		const tokenizer = await fromFile(samplePath);
+		try {
+			const fileType = await detectCfbf.detect(tokenizer);
+			assert.isDefined(fileType, 'should detect the file type');
+			assert.strictEqual(fileType.mime, 'application/x-mspublisher');
+			assert.strictEqual(fileType.ext, 'pub');
+			assert.strictEqual(fileType.name, 'Microsoft Publisher 5.0/98');
+		} finally {
+			await tokenizer.close();
+		}
+	});
+
+	it('should detect Microsoft Publisher 3.0/95-4.0/97', async () => {
+		const samplePath = getSamplePath('XOFF.PUB');
+		const tokenizer = await fromFile(samplePath);
+		try {
+			const fileType = await detectCfbf.detect(tokenizer);
+			assert.isDefined(fileType, 'should detect the file type');
+			assert.strictEqual(fileType.mime, 'application/x-mspublisher');
+			assert.strictEqual(fileType.ext, 'pub');
+			assert.strictEqual(fileType.name, 'Microsoft Publisher 3.0/95-4.0/97');
+		} finally {
+			await tokenizer.close();
+		}
+	});
+
 	it('should detect .msi (Windows Installer Package)', async () => {
 		const samplePath = getSamplePath('fixture.msi');
 		const tokenizer = await fromFile(samplePath);

@@ -59,6 +59,18 @@ export const CFBF_CLSIDS: readonly CfbfClsidRecord[] = [
 		mime: 'application/vnd.visio'
 	},
 	{
+		name: 'Microsoft Publisher 5.0/98',
+		clsid: '00021201-0000-0000-00c0-000000000046',
+		ext: 'pub',
+		mime: 'application/x-mspublisher'
+	},
+	{
+		name: 'Microsoft Publisher 3.0/95-4.0/97',
+		clsid: '00021200-0000-0000-00c0-000000000046',
+		ext: 'pub',
+		mime: 'application/x-mspublisher'
+	},
+	{
 		name: 'Windows Installer Package',
 		clsid: '000c1084-0000-0000-c000-000000000046',
 		ext: 'msi',
