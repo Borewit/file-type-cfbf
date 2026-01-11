@@ -143,6 +143,34 @@ describe('CFBF detector', () => {
 		}
 	});
 
+	it('should detect Microsoft Visio 2000-2002 Drawing', async () => {
+		const samplePath = getSamplePath('Perspective Block Diagram.vsd');
+		const tokenizer = await fromFile(samplePath);
+		try {
+			const fileType = await detectCfbf.detect(tokenizer);
+			assert.isDefined(fileType, 'should detect the file type');
+			assert.strictEqual(fileType.mime, 'application/vnd.visio');
+			assert.strictEqual(fileType.ext, 'vsd');
+			assert.strictEqual(fileType.name, 'Microsoft Visio 2000-2002 Drawing');
+		} finally {
+			await tokenizer.close();
+		}
+	});
+
+	it('should detect Microsoft Visio 2003-2010 Drawing', async () => {
+		const samplePath = getSamplePath('XFUNCH_U.VSS');
+		const tokenizer = await fromFile(samplePath);
+		try {
+			const fileType = await detectCfbf.detect(tokenizer);
+			assert.isDefined(fileType, 'should detect the file type');
+			assert.strictEqual(fileType.mime, 'application/vnd.visio');
+			assert.strictEqual(fileType.ext, 'vsd');
+			assert.strictEqual(fileType.name, 'Microsoft Visio 2003-2010 Drawing');
+		} finally {
+			await tokenizer.close();
+		}
+	});
+
 	it('should detect .msi (Windows Installer Package)', async () => {
 		const samplePath = getSamplePath('fixture.msi');
 		const tokenizer = await fromFile(samplePath);
