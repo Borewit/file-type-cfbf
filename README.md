@@ -39,6 +39,7 @@ used by Microsoft Office prior to Office 2007:
 - `.pub` Microsoft Publisher documents (Publisher 3.0/95-4.0/97, Publisher 5.0/98)
 - `.ppt` Microsoft PowerPoint presentations (PowerPoint 4.0, 7.0/95, 97–2003)
 - `.vsd` Microsoft Visio drawings (2000–2002, 2003–2010)
+- `.wps` Microsoft Works 7–9 Word Processor Document
 - `.xls` Microsoft Excel spreadsheets (Excel 5.0/95, Excel 97–2003)
 
 Other files:

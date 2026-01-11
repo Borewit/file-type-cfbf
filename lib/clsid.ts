@@ -71,6 +71,12 @@ export const CFBF_CLSIDS: readonly CfbfClsidRecord[] = [
 		mime: 'application/x-mspublisher'
 	},
 	{
+		name: 'Microsoft Works 7–9 Word Processor Document',
+		clsid: '00021302-0000-0000-c000-000000000046',
+		ext: 'wps',
+		mime: 'application/vnd.ms-works'
+	},
+	{
 		name: 'Windows Installer Package',
 		clsid: '000c1084-0000-0000-c000-000000000046',
 		ext: 'msi',
