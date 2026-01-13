@@ -116,6 +116,7 @@ __metadata:
     sax: "npm:^1.4.1"
     strtok3: "npm:^10.3.4"
     typescript: "npm:^5.9.3"
+    win-guid: "npm:^0.1.3"
   languageName: unknown
   linkType: soft
 
@@ -1104,6 +1105,13 @@ __metadata:
   bin:
     node-which: ./bin/node-which
   checksum: 10c0/66522872a768b60c2a65a57e8ad184e5372f5b6a9ca6d5f033d4b0dc98aff63995655a7503b9c0a2598936f532120e81dd8cc155e2e92ed662a2b9377cc4374f
+  languageName: node
+  linkType: hard
+
+"win-guid@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "win-guid@npm:0.1.3"
+  checksum: 10c0/20ab9bfb1d189746b955579adca96084e6d2f3ef216adf1c08a567484500f1b2902a414bc0120472b6b797b4f95629da658a1f01315519525b1d4b5d07b0629b
   languageName: node
   linkType: hard
 
