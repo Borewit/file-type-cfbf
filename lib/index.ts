@@ -1,7 +1,7 @@
 import type { ITokenizer } from 'strtok3';
+import { Guid } from 'win-guid';
 import type { Detector, FileTypeResult } from 'file-type';
 import { CFBF_CLSIDS } from './clsid.js';
-import { Guid } from './guid.js';
 
 const guidCache = new Map<string, Guid>();
 
