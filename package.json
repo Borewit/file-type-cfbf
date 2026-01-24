@@ -27,7 +27,7 @@
 		"msi"
 	],
 	"dependencies": {
-		"sax": "^1.4.1",
+		"sax": "^1.4.4",
 		"strtok3": "^10.3.4",
 		"win-guid": "^0.2.0"
 	},
