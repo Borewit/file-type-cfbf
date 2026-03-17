@@ -111,7 +111,7 @@ __metadata:
     "@types/node": "npm:^25.0.9"
     chai: "npm:^6.0.1"
     del-cli: "npm:^6.0.0"
-    file-type: "npm:^21.3.0"
+    file-type: "npm:^21.3.3"
     mocha: "npm:^11.7.1"
     sax: "npm:^1.4.4"
     strtok3: "npm:^10.3.4"
@@ -452,15 +452,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-type@npm:^21.3.0":
-  version: 21.3.0
-  resolution: "file-type@npm:21.3.0"
+"file-type@npm:^21.3.3":
+  version: 21.3.3
+  resolution: "file-type@npm:21.3.3"
   dependencies:
     "@tokenizer/inflate": "npm:^0.4.1"
     strtok3: "npm:^10.3.4"
     token-types: "npm:^6.1.1"
     uint8array-extras: "npm:^1.4.0"
-  checksum: 10c0/1b1fa909e6063044a6da1d2ea348ee4d747ed9286382d3f0d4d6532c11fb2ea9f2e7e67b2bc7d745d1bc937e05dee1aa8cb912c64250933bcb393a3744f4e284
+  checksum: 10c0/3d2a52e6ab1ec4cac8f08a59f0bbd69fba72033e4ee709a41df6562ba79a1d8d0a2bec82bbc70409f74cbffa6467db93599af27bbf1719d4d9e6294e3fae5156
   languageName: node
   linkType: hard
 
