@@ -38,7 +38,7 @@
 		"del-cli": "^6.0.0",
 		"file-type": "^21.3.0",
 		"mocha": "^11.7.1",
-		"typescript": "^5.9.3"
+		"typescript": "^6.0.2"
 	},
 	"files": [
 		"lib/**/*.js",
