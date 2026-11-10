@@ -75,6 +75,10 @@ Other files:
 - `.msg` Microsoft Outlook items (`application/vnd.ms-outlook`)
 - `.msi`  [Windows installer files](https://en.wikipedia.org/wiki/Windows_Installer)
 
+## Repository automation
+
+See [GitHub Actions and Dependabot setup](.github/AUTOMATION.md).
+
 ## Licence
 
 The original project is by [Borewit](https://github.com/Borewit). Original copyright and license notices are retained. This fork is licensed under the [MIT License](LICENSE.txt). Feel free to use, modify, and distribute as needed.
