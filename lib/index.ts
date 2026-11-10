@@ -58,10 +58,12 @@ export const detectCfbf: Detector = {
 		}
 
 		// Calculate CLSID location in file:
-		// - 512 bytes for header
+		// - One full sector for the header: 512 bytes in v3, 4096 in v4
+		//   [MS-CFB] 2.2 requires 3584 bytes of zero padding after the v4 header:
+		//   https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/05060311-bfce-4b12-874d-71fd4ce63aea
 		// - sectDirStart * sectorSize to reach directory sector
 		// - 80 bytes offset to CLSID within root directory entry
-		const clsidOffset = 512 + sectDirStart * sectorSize + 80;
+		const clsidOffset = (sectDirStart + 1) * sectorSize + 80;
 		const requiredLength = clsidOffset + 16;
 
 		// Read enough bytes to reach the CLSID

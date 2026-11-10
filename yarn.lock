@@ -103,9 +103,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@file-type/cfbf@workspace:.":
+"@file-type/cfbf-plus@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@file-type/cfbf@workspace:."
+  resolution: "@file-type/cfbf-plus@workspace:."
   dependencies:
     "@biomejs/biome": "npm:2.3.11"
     "@types/node": "npm:^25.0.9"

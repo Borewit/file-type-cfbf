@@ -11,6 +11,12 @@ export interface CfbfClsidRecord {
 
 export const CFBF_CLSIDS: readonly CfbfClsidRecord[] = [
 	{
+		name: 'Microsoft Outlook Item',
+		clsid: '00020d0b-0000-0000-c000-000000000046',
+		ext: 'msg',
+		mime: 'application/vnd.ms-outlook'
+	},
+	{
 		name: 'Microsoft Word 97-2003 Document (Word.Document.8)',
 		clsid: '00020906-0000-0000-c000-000000000046',
 		ext: 'doc',

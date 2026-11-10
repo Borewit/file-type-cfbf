@@ -1,18 +1,24 @@
-[![NPM version](https://img.shields.io/npm/v/@file-type/cfbf.svg)](https://npmjs.org/package/@file-type/cfbf)
-[![Node.js CI](https://github.com/Borewit/file-type-cfbf/actions/workflows/nodejs-ci.yml/badge.svg)](https://github.com/Borewit/file-type-cfbf/actions/workflows/nodejs-ci.yml)
-[![npm downloads](http://img.shields.io/npm/dm/@file-type/cfbf.svg)](https://npmcharts.com/compare/@file-type/cfbf?start=365)
+[![NPM version](https://img.shields.io/npm/v/@file-type/cfbf-plus.svg)](https://npmjs.org/package/@file-type/cfbf-plus)
+[![Node.js CI](https://github.com/mosharov/file-type-cfbf-plus/actions/workflows/nodejs-ci.yml/badge.svg)](https://github.com/mosharov/file-type-cfbf-plus/actions/workflows/nodejs-ci.yml)
+[![npm downloads](https://img.shields.io/npm/dm/@file-type/cfbf-plus.svg)](https://npmcharts.com/compare/@file-type/cfbf-plus?start=365)
 
-# @file-type/cfbf
+# @file-type/cfbf-plus
+
+Fork of [`@file-type/cfbf`](https://github.com/Borewit/file-type-cfbf), based on version `0.2.2`, with Outlook `.msg` recognition enabled. It also corrects root CLSID offsets for CFB version 4 (4096-byte sectors). The fork keeps version `0.2.2` under the distinct npm name `@file-type/cfbf-plus`.
 
 Detector plugin for [file-type](https://github.com/sindresorhus/file-type) that identifies files based on the [Compound File Binary Format](https://en.wikipedia.org/wiki/Compound_File_Binary_Format),
 commonly known as CFBF or OLE Compound Document.
 
-CFBF is a container format used by many legacy Microsoft Office files and other Windows applications. This plugin detects the container itself, not the specific document content inside it.
+CFBF is a container format used by many legacy Microsoft Office files and other Windows applications. This plugin identifies supported formats by the CLSID in the CFBF root directory entry. Outlook MSG recognition uses CLSID `00020d0b-0000-0000-c000-000000000046` and returns MIME type `application/vnd.ms-outlook`. It does not parse message bodies or attachments, or validate the complete document structure. Unknown or absent CLSIDs are not identified by this detector.
 
 ## Installation
 
-```bash
-npm install @file-type/cfbf
+```sh
+yarn add @file-type/cfbf-plus
+```
+
+```sh
+npm install @file-type/cfbf-plus
 ```
 
 ## Usage
@@ -20,10 +26,10 @@ npm install @file-type/cfbf
 The following example shows how add the CFBF detector to [file-type](https://github.com/sindresorhus/file-type).
 ```js
 import {FileTypeParser} from 'file-type';
-import {detectCfbf} from '@file-type/cfbf';
+import {detectCfbf} from '@file-type/cfbf-plus';
 
 const parser = new FileTypeParser({customDetectors: [detectCfbf]});
-const fileType = await parser.fromFile('smaple.doc');
+const fileType = await parser.fromFile('sample.msg');
 console.log(fileType);
 ```
 
@@ -43,8 +49,9 @@ used by Microsoft Office prior to Office 2007:
 - `.xls` Microsoft Excel spreadsheets (Excel 5.0/95, Excel 97–2003)
 
 Other files:
+- `.msg` Microsoft Outlook items (`application/vnd.ms-outlook`)
 - `.msi`  [Windows installer files](https://en.wikipedia.org/wiki/Windows_Installer)
 
 ## Licence
 
-This project is licensed under the [MIT License](LICENSE.txt). Feel free to use, modify, and distribute as needed.
+The original project is by [Borewit](https://github.com/Borewit). Original copyright and license notices are retained. This fork is licensed under the [MIT License](LICENSE.txt). Feel free to use, modify, and distribute as needed.
