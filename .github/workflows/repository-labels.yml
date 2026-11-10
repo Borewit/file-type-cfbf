@@ -1,0 +1,46 @@
+name: Repository Labels
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: repository-labels
+  cancel-in-progress: false
+
+jobs:
+  ensure_labels:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create missing repository labels
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $labels = @(
+            @{ name = 'dependencies'; color = '0366d6'; description = 'Updates to runtime dependencies' }
+            @{ name = 'dev-dependencies'; color = '5319e7'; description = 'Updates to development dependencies' }
+            @{ name = 'DevOps'; color = '1d76db'; description = 'GitHub Actions and repository automation' }
+            @{ name = 'API change'; color = 'b60205'; description = 'Changes to the public API' }
+            @{ name = 'enhancement'; color = 'a2eeef'; description = 'New features' }
+            @{ name = 'improvement'; color = '84b6eb'; description = 'Improvements to existing features' }
+            @{ name = 'bug'; color = 'd73a4a'; description = 'Bug fixes' }
+            @{ name = 'technical debt'; color = 'd4c5f9'; description = 'Internal maintenance and refactoring' }
+            @{ name = 'documentation'; color = '0075ca'; description = 'Documentation changes' }
+          )
+
+          $existingJson = gh label list --repo $env:GH_REPO --limit 1000 --json name
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to read repository labels.' }
+          $existingLabels = @($existingJson | ConvertFrom-Json)
+
+          foreach ($label in $labels) {
+            if (@($existingLabels.name) -contains $label.name) { continue }
+            gh label create $label.name --repo $env:GH_REPO --color $label.color --description $label.description
+            if ($LASTEXITCODE -ne 0) { throw "Failed to create label: $($label.name)" }
+          }

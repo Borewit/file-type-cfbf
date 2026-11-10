@@ -1,6 +1,5 @@
 version: 2
 updates:
-
   - package-ecosystem: npm
     directory: "/"
     schedule:
@@ -16,3 +15,12 @@ updates:
         dependency-type: "development"
         patterns:
           - "@types/*"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      time: "06:00"
+    target-branch: master
+    labels:
+      - DevOps

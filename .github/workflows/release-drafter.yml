@@ -1,21 +1,63 @@
 name: Release Drafter
-
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: release-drafter
+  cancel-in-progress: false
+
 jobs:
   update_release_draft:
+    if: ${{ github.ref == 'refs/heads/master' }}
     permissions:
       contents: write
       pull-requests: read
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v7
+      - name: Checkout the repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Read package version and check published releases
+        id: package
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifest = Get-Content -Raw -LiteralPath 'package.json' | ConvertFrom-Json
+          $version = [string]$manifest.version
+          if ($version -notmatch '^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$') {
+            throw 'package.json must contain a valid package version.'
+          }
+
+          $releasesJson = gh api --paginate --slurp "repos/$env:GH_REPO/releases?per_page=100"
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to read GitHub releases.' }
+          $pages = ConvertFrom-Json -InputObject ($releasesJson -join "`n") -NoEnumerate
+          $published = $false
+          foreach ($page in $pages) {
+            foreach ($release in $page) {
+              if (-not $release.draft -and $release.tag_name -in @("v$version", $version)) {
+                $published = $true
+              }
+            }
+          }
+
+          Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "version=$version" -Encoding utf8
+          Add-Content -LiteralPath $env:GITHUB_OUTPUT -Value "published=$($published.ToString().ToLowerInvariant())" -Encoding utf8
+          if ($published) { Write-Host "Release v$version is already published; skipping the draft." }
+
+      - name: Update the release draft
+        if: ${{ steps.package.outputs.published == 'false' }}
+        uses: release-drafter/release-drafter@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          version: ${{ steps.package.outputs.version }}
+          commitish: ${{ github.sha }}

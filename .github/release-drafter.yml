@@ -1,47 +1,35 @@
-# Release Drafter template
-# Ref: https://github.com/marketplace/actions/release-drafter
-
+# Release notes use the package.json version passed by the workflow.
 name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
 categories:
+  - type: pre-exclude
+    when:
+      labels:
+        - DevOps
+        - dev-dependencies
   - title: 💥 API Changes
-    labels:
-      - API change
+    when:
+      label: API change
   - title: 🚀 Enhancements
-    labels:
-      - enhancement
+    when:
+      label: enhancement
   - title: 🎨 Improvements
-    labels:
-      - improvement
+    when:
+      label: improvement
   - title: 🐛 Bug Fixes
-    labels:
-      - bug
+    when:
+      label: bug
   - title: 🔧 Under the hood
-    labels:
-      - technical debt
-      - dev-dependencies
+    when:
+      label: technical debt
   - title: ⬆️ Dependencies
-    labels:
-      - dependencies
+    when:
+      label: dependencies
   - title: 📝 Documentation
-    labels:
-      - documentation
-exclude-labels:
-  - DevOps
-  - dev-dependencies
+    when:
+      label: documentation
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
-change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
-version-resolver:
-  major:
-    labels:
-      - 'major'
-  minor:
-    labels:
-      - 'minor'
-  patch:
-    labels:
-      - 'patch'
-  default: patch
+change-title-escapes: '\\<*_&'
 template: |
   ## Changes
 

@@ -15,14 +15,25 @@ jobs:
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v3
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Add dev-dependencies label
-        uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ steps.dependabot-metadata.outputs.dependency-type == 'direct:development' }}
-        with:
-          labels: dev-dependencies
-      - name: Remove dependencies label
-        uses: actions-ecosystem/action-remove-labels@v1
-        if: ${{ steps.dependabot-metadata.outputs.dependency-type == 'direct:development' }}
-        with:
-          labels: dependencies
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Label development dependency updates
+        if: ${{ steps.dependabot-metadata.outputs.package-ecosystem == 'npm' && steps.dependabot-metadata.outputs.dependency-type == 'direct:development' }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $pullRequestJson = gh pr view $env:PR_NUMBER --repo $env:GH_REPO --json labels
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to read pull request labels.' }
+          $pullRequest = $pullRequestJson | ConvertFrom-Json
+
+          gh pr edit $env:PR_NUMBER --repo $env:GH_REPO --add-label dev-dependencies
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to add the dev-dependencies label.' }
+
+          if (@($pullRequest.labels.name) -contains 'dependencies') {
+            gh pr edit $env:PR_NUMBER --repo $env:GH_REPO --remove-label dependencies
+            if ($LASTEXITCODE -ne 0) { throw 'Failed to remove the dependencies label.' }
+          }
