@@ -5,6 +5,8 @@ import {fromBuffer, fromFile} from 'strtok3';
 import {FileTypeParser} from 'file-type';
 import {assert} from 'chai';
 
+import * as cfbf from 'file-type-cfbf-plus';
+
 import {detectCfbf} from '../lib/index.js';
 
 const filename = fileURLToPath(import.meta.url);
@@ -32,6 +34,59 @@ function cfbMetadata(clsid = outlookClsid, directorySector = 0, sectorSize = 512
 	bytes.set(clsid, rootOffset + 80);
 	return bytes;
 }
+
+describe('Supported formats', () => {
+	it('exports the unique supported extensions as a Set through the package entry point', () => {
+		assert.instanceOf(cfbf.supportedExtensions, Set);
+		assert.sameMembers([...cfbf.supportedExtensions], [
+			'doc', 'xls', 'ppt', 'msg', 'vsd', 'pub', 'wps', 'msi'
+		]);
+	});
+
+	it('exports the unique supported MIME types as a Set through the package entry point', () => {
+		assert.instanceOf(cfbf.supportedMimeTypes, Set);
+		assert.sameMembers([...cfbf.supportedMimeTypes], [
+			'application/msword',
+			'application/vnd.ms-excel',
+			'application/vnd.ms-powerpoint',
+			'application/vnd.ms-outlook',
+			'application/vnd.visio',
+			'application/x-mspublisher',
+			'application/vnd.ms-works',
+			'application/x-msi'
+		]);
+	});
+
+	it('does not advertise container, text or unrelated extensions', () => {
+		assert.instanceOf(cfbf.supportedExtensions, Set);
+		for (const extension of ['cfb', 'txt', 'csv', 'pdf', 'docx']) {
+			assert.isFalse(cfbf.supportedExtensions.has(extension), extension);
+		}
+	});
+
+	it('does not advertise container, text or unrelated MIME types', () => {
+		assert.instanceOf(cfbf.supportedMimeTypes, Set);
+		for (const mimeType of ['application/x-cfb', 'text/plain', 'text/csv', 'application/pdf']) {
+			assert.isFalse(cfbf.supportedMimeTypes.has(mimeType), mimeType);
+		}
+	});
+
+	it('includes detected Office and Outlook formats in both public sets', async () => {
+		assert.instanceOf(cfbf.supportedExtensions, Set);
+		assert.instanceOf(cfbf.supportedMimeTypes, Set);
+		const parser = new FileTypeParser({customDetectors: [cfbf.detectCfbf]});
+		const results = [];
+		for (const filename of ['sample1.doc', 'sample1.xls', 'sample1.ppt']) {
+			results.push(await parser.fromFile(getSamplePath(filename)));
+		}
+		results.push(await parser.fromBuffer(cfbMetadata()));
+		for (const result of results) {
+			assert.isDefined(result);
+			assert.isTrue(cfbf.supportedExtensions.has(result.ext), result.ext);
+			assert.isTrue(cfbf.supportedMimeTypes.has(result.mime), result.mime);
+		}
+	});
+});
 
 describe('CFBF detector', () => {
 

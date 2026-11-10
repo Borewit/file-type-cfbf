@@ -1,6 +1,6 @@
 {
 	"name": "file-type-cfbf-plus",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "Compound File Binary Format (CFBF) detection plugin(Fork of @file-type/cfbf) for file-type with Outlook MSG recognition enabled. ",
 	"type": "module",
 	"types": "./lib/index.d.ts",
@@ -14,7 +14,7 @@
 		"build": "yarn run clean && yarn run compile",
 		"test": "mocha",
 		"update-biome": "yarn add -D --exact @biomejs/biome && npx @biomejs/biome migrate --write",
-		"prepublish": "yarn run build && yarn run lint:ts && yarn run test"
+		"prepublishOnly": "yarn run build && yarn run lint:ts && yarn run test"
 	},
 	"keywords": [
 		"cfbf",

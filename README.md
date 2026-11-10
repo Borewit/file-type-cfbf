@@ -4,7 +4,7 @@
 
 # file-type-cfbf-plus
 
-Fork of [`@file-type/cfbf`](https://github.com/Borewit/file-type-cfbf), based on version `0.2.2`, with Outlook `.msg` recognition enabled. It also corrects root CLSID offsets for CFB version 4 (4096-byte sectors). The fork keeps version `0.2.2` under the distinct npm name `file-type-cfbf-plus`.
+Fork of [`@file-type/cfbf`](https://github.com/Borewit/file-type-cfbf), based on version `0.2.2`, with Outlook `.msg` recognition enabled. It also corrects root CLSID offsets for CFB version 4 (4096-byte sectors).
 
 Detector plugin for [file-type](https://github.com/sindresorhus/file-type) that identifies files based on the [Compound File Binary Format](https://en.wikipedia.org/wiki/Compound_File_Binary_Format),
 commonly known as CFBF or OLE Compound Document.
@@ -32,6 +32,29 @@ const parser = new FileTypeParser({customDetectors: [detectCfbf]});
 const fileType = await parser.fromFile('sample.msg');
 console.log(fileType);
 ```
+
+## API
+
+### supportedExtensions
+
+A `Set<string>` of file extensions detectable by this plugin, without a leading dot. The TypeScript type is `ReadonlySet<string>`, as in `file-type`.
+
+### supportedMimeTypes
+
+A `Set<string>` of MIME types detectable by this plugin. The TypeScript type is `ReadonlySet<string>`, as in `file-type`.
+
+Both sets are derived from the CLSID database, with duplicate values removed. They describe the plugin's detection capabilities and do not automatically extend the supported sets exported by `file-type`.
+
+```js
+import {supportedExtensions, supportedMimeTypes} from 'file-type-cfbf-plus';
+
+console.log(supportedExtensions.has('doc')); // true
+console.log(supportedExtensions.has('docx')); // false
+console.log(supportedMimeTypes.has('application/vnd.ms-outlook')); // true
+console.log(supportedMimeTypes.has('text/plain')); // false
+```
+
+For capability checks across the standard detectors and this plugin, combine the corresponding sets from both packages.
 
 ## Support file formats
 

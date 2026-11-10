@@ -3,6 +3,12 @@ import { Guid } from 'win-guid';
 import type { Detector, FileTypeResult } from 'file-type';
 import { CFBF_CLSIDS } from './clsid.js';
 
+/** Supported file extensions from the CLSID database. */
+export const supportedExtensions: ReadonlySet<string> = new Set(CFBF_CLSIDS.map(record => record.ext));
+
+/** Supported MIME types from the CLSID database. */
+export const supportedMimeTypes: ReadonlySet<string> = new Set(CFBF_CLSIDS.map(record => record.mime));
+
 const guidCache = new Map<string, Guid>();
 
 export interface NamedFileTypeResult extends FileTypeResult {
