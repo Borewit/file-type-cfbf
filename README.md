@@ -1,10 +1,10 @@
-[![NPM version](https://img.shields.io/npm/v/@file-type/cfbf-plus.svg)](https://npmjs.org/package/@file-type/cfbf-plus)
+[![NPM version](https://img.shields.io/npm/v/file-type-cfbf-plus.svg)](https://npmjs.org/package/file-type-cfbf-plus)
 [![Node.js CI](https://github.com/mosharov/file-type-cfbf-plus/actions/workflows/nodejs-ci.yml/badge.svg)](https://github.com/mosharov/file-type-cfbf-plus/actions/workflows/nodejs-ci.yml)
-[![npm downloads](https://img.shields.io/npm/dm/@file-type/cfbf-plus.svg)](https://npmcharts.com/compare/@file-type/cfbf-plus?start=365)
+[![npm downloads](https://img.shields.io/npm/dm/file-type-cfbf-plus.svg)](https://npmcharts.com/compare/file-type-cfbf-plus?start=365)
 
-# @file-type/cfbf-plus
+# file-type-cfbf-plus
 
-Fork of [`@file-type/cfbf`](https://github.com/Borewit/file-type-cfbf), based on version `0.2.2`, with Outlook `.msg` recognition enabled. It also corrects root CLSID offsets for CFB version 4 (4096-byte sectors). The fork keeps version `0.2.2` under the distinct npm name `@file-type/cfbf-plus`.
+Fork of [`@file-type/cfbf`](https://github.com/Borewit/file-type-cfbf), based on version `0.2.2`, with Outlook `.msg` recognition enabled. It also corrects root CLSID offsets for CFB version 4 (4096-byte sectors). The fork keeps version `0.2.2` under the distinct npm name `file-type-cfbf-plus`.
 
 Detector plugin for [file-type](https://github.com/sindresorhus/file-type) that identifies files based on the [Compound File Binary Format](https://en.wikipedia.org/wiki/Compound_File_Binary_Format),
 commonly known as CFBF or OLE Compound Document.
@@ -14,11 +14,11 @@ CFBF is a container format used by many legacy Microsoft Office files and other 
 ## Installation
 
 ```sh
-yarn add @file-type/cfbf-plus
+yarn add file-type-cfbf-plus
 ```
 
 ```sh
-npm install @file-type/cfbf-plus
+npm install file-type-cfbf-plus
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ npm install @file-type/cfbf-plus
 The following example shows how add the CFBF detector to [file-type](https://github.com/sindresorhus/file-type).
 ```js
 import {FileTypeParser} from 'file-type';
-import {detectCfbf} from '@file-type/cfbf-plus';
+import {detectCfbf} from 'file-type-cfbf-plus';
 
 const parser = new FileTypeParser({customDetectors: [detectCfbf]});
 const fileType = await parser.fromFile('sample.msg');

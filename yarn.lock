@@ -103,23 +103,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@file-type/cfbf-plus@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@file-type/cfbf-plus@workspace:."
-  dependencies:
-    "@biomejs/biome": "npm:2.3.11"
-    "@types/node": "npm:^25.0.9"
-    chai: "npm:^6.0.1"
-    del-cli: "npm:^6.0.0"
-    file-type: "npm:21.3.2"
-    mocha: "npm:^11.7.1"
-    sax: "npm:^1.4.4"
-    strtok3: "npm:^10.3.4"
-    typescript: "npm:^5.9.3"
-    win-guid: "npm:^0.2.1"
-  languageName: unknown
-  linkType: soft
-
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -451,6 +434,23 @@ __metadata:
   checksum: 10c0/e5dd725884decb1f11e5c822221d76136f239d0236f176fab80b7b8f9e7619ae57e6b4e5b73defc21e6b9ef99437ee7b545cff8e6c2c337819633712fa9d352e
   languageName: node
   linkType: hard
+
+"file-type-cfbf-plus@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "file-type-cfbf-plus@workspace:."
+  dependencies:
+    "@biomejs/biome": "npm:2.3.11"
+    "@types/node": "npm:^25.0.9"
+    chai: "npm:^6.0.1"
+    del-cli: "npm:^6.0.0"
+    file-type: "npm:21.3.2"
+    mocha: "npm:^11.7.1"
+    sax: "npm:^1.4.4"
+    strtok3: "npm:^10.3.4"
+    typescript: "npm:^5.9.3"
+    win-guid: "npm:^0.2.1"
+  languageName: unknown
+  linkType: soft
 
 "file-type@npm:21.3.2":
   version: 21.3.2

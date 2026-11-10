@@ -1,5 +1,5 @@
 {
-	"name": "@file-type/cfbf-plus",
+	"name": "file-type-cfbf-plus",
 	"version": "0.2.2",
 	"description": "Compound File Binary Format (CFBF) detection plugin(Fork of @file-type/cfbf) for file-type with Outlook MSG recognition enabled. ",
 	"type": "module",
