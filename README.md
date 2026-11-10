@@ -1,6 +1,6 @@
-[![NPM version](https://img.shields.io/npm/v/file-type-cfbf-plus.svg)](https://npmjs.org/package/file-type-cfbf-plus)
-[![Node.js CI](https://github.com/mosharov/file-type-cfbf-plus/actions/workflows/nodejs-ci.yml/badge.svg)](https://github.com/mosharov/file-type-cfbf-plus/actions/workflows/nodejs-ci.yml)
-[![npm downloads](https://img.shields.io/npm/dm/file-type-cfbf-plus.svg)](https://npmcharts.com/compare/file-type-cfbf-plus?start=365)
+[![NPM version](https://img.shields.io/npm/v/file-type-cfbf-plus.svg)](https://www.npmjs.com/package/file-type-cfbf-plus)
+[![Node.js CI](https://github.com/mosharov/file-type-cfbf-plus/actions/workflows/nodejs-ci.yml/badge.svg?branch=master)](https://github.com/mosharov/file-type-cfbf-plus/actions/workflows/nodejs-ci.yml)
+[![npm downloads](https://img.shields.io/npm/dm/file-type-cfbf-plus.svg)](https://www.npmjs.com/package/file-type-cfbf-plus)
 
 # file-type-cfbf-plus
 

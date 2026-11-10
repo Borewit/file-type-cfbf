@@ -3,6 +3,10 @@ on:
   pull_request:
     branches: [ "master" ]
   push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
 
@@ -15,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x, 24.x]
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
 
