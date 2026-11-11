@@ -1,7 +1,8 @@
 import path from 'node:path';
+import {Readable} from 'node:stream';
 import {fileURLToPath} from 'node:url';
 import {describe, it} from 'mocha';
-import {fromBuffer, fromFile} from 'strtok3';
+import {fromBuffer, fromFile, fromStream} from 'strtok3';
 import {FileTypeParser} from 'file-type';
 import {assert} from 'chai';
 
@@ -323,4 +324,121 @@ describe('Outlook MSG CLSID detection', () => {
 		});
 	});
 
+});
+
+// Fail before a regression can exhaust the test process's memory.
+async function withoutLargeAllocations(run) {
+	const NativeUint8Array = globalThis.Uint8Array;
+	globalThis.Uint8Array = new Proxy(NativeUint8Array, {
+		construct(target, args, newTarget) {
+			if (typeof args[0] === 'number' && args[0] > 64 * 1024) {
+				throw new RangeError('Detector allocation exceeded 64 KiB');
+			}
+			return Reflect.construct(target, args, newTarget);
+		}
+	});
+	try {
+		return await run();
+	} finally {
+		globalThis.Uint8Array = NativeUint8Array;
+	}
+}
+
+describe('CFBF detection memory bounds', () => {
+	for (const directorySector of [262143, 0xfffffffd]) {
+		it(`rejects a 52-byte buffer with distant directory sector ${directorySector} without large allocations`, async () => {
+			const bytes = cfbMetadata(outlookClsid, 0, 4096).slice(0, 52);
+			new DataView(bytes.buffer).setUint32(48, directorySector, true);
+			const tokenizer = fromBuffer(bytes);
+			const result = await withoutLargeAllocations(() => detectCfbf.detect(tokenizer));
+			assert.isUndefined(result);
+			assert.strictEqual(tokenizer.position, 0);
+		});
+	}
+
+	for (const sizeMiB of [50, 100]) {
+		it(`recognizes a CLSID at the end of a ${sizeMiB} MiB buffer without allocating its prefix`, async () => {
+			const directorySector = sizeMiB * 1024 * 1024 / 512 - 2;
+			const tokenizer = fromBuffer(cfbMetadata(outlookClsid, directorySector));
+			const parser = new FileTypeParser({customDetectors: [detectCfbf]});
+			const result = await withoutLargeAllocations(() => parser.fromTokenizer(tokenizer));
+			assert.strictEqual(result?.ext, 'msg');
+			assert.strictEqual(result?.mime, 'application/vnd.ms-outlook');
+			assert.strictEqual(tokenizer.position, 0);
+		});
+	}
+
+	it('recognizes a CLSID relative to the current tokenizer position', async () => {
+		const bytes = new Uint8Array(16 + 1024);
+		bytes.set(cfbMetadata(), 16);
+		const tokenizer = fromBuffer(bytes);
+		await tokenizer.ignore(16);
+		const result = await detectCfbf.detect(tokenizer);
+		assert.strictEqual(result?.ext, 'msg');
+		assert.strictEqual(tokenizer.position, 16);
+	});
+});
+
+describe('CFBF read boundaries', () => {
+	for (const [directorySector, sectorSize] of [[4095, 512], [3, 4096]]) {
+		it(`recognizes a stream CLSID in sector ${directorySector} with ${sectorSize}-byte sectors without consuming it`, async () => {
+			const bytes = cfbMetadata(outlookClsid, directorySector, sectorSize);
+			const tokenizer = await fromStream(Readable.from([bytes], {objectMode: false}));
+			try {
+				const result = await detectCfbf.detect(tokenizer);
+				assert.strictEqual(result?.ext, 'msg');
+				assert.strictEqual(tokenizer.position, 0);
+				const header = new Uint8Array(8);
+				await tokenizer.peekBuffer(header);
+				assert.deepEqual([...header], [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]);
+			} finally {
+				await tokenizer.close();
+			}
+		});
+	}
+
+	it('rejects an offset beyond a known stream size before buffering the prefix', async () => {
+		const bytes = cfbMetadata().slice(0, 52);
+		new DataView(bytes.buffer).setUint32(48, 255, true);
+		const tokenizer = await fromStream(Readable.from([bytes], {objectMode: false}), {
+			fileInfo: {size: bytes.length}
+		});
+		try {
+			const result = await withoutLargeAllocations(() => detectCfbf.detect(tokenizer));
+			assert.isUndefined(result);
+			assert.strictEqual(tokenizer.position, 0);
+		} finally {
+			await tokenizer.close();
+		}
+	});
+
+	it('recognizes a CLSID ending exactly at the known file size', async () => {
+		const tokenizer = fromBuffer(cfbMetadata().slice(0, 608));
+		const result = await detectCfbf.detect(tokenizer);
+		assert.strictEqual(result?.ext, 'msg');
+		assert.strictEqual(tokenizer.position, 0);
+	});
+
+	it('rejects a truncated CLSID in a stream with unknown size', async () => {
+		const bytes = cfbMetadata().slice(0, 607);
+		const tokenizer = await fromStream(Readable.from([bytes], {objectMode: false}));
+		try {
+			assert.isUndefined(await detectCfbf.detect(tokenizer));
+			assert.strictEqual(tokenizer.position, 0);
+		} finally {
+			await tokenizer.close();
+		}
+	});
+
+	it('preserves standard CFB detection when a stream ends before a distant CLSID', async () => {
+		const bytes = cfbMetadata().slice(0, 52);
+		new DataView(bytes.buffer).setUint32(48, 4095, true);
+		const tokenizer = await fromStream(Readable.from([bytes], {objectMode: false}));
+		try {
+			const parser = new FileTypeParser({customDetectors: [detectCfbf]});
+			assert.deepEqual(await parser.fromTokenizer(tokenizer), {ext: 'cfb', mime: 'application/x-cfb'});
+		} finally {
+			await tokenizer.close();
+		}
+	});
 });

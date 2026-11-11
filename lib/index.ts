@@ -70,17 +70,21 @@ export const detectCfbf: Detector = {
 		// - sectDirStart * sectorSize to reach directory sector
 		// - 80 bytes offset to CLSID within root directory entry
 		const clsidOffset = (sectDirStart + 1) * sectorSize + 80;
-		const requiredLength = clsidOffset + 16;
+		const clsidPosition = tokenizer.position + clsidOffset;
 
-		// Read enough bytes to reach the CLSID
-		const buffer = new Uint8Array(requiredLength)
+		if (tokenizer.fileInfo.size !== undefined && clsidPosition + 16 > tokenizer.fileInfo.size) {
+			return undefined;
+		}
+
+		// Read only the CLSID; random-access inputs do not buffer the preceding contents.
+		const buffer = new Uint8Array(16)
 		const bytesRead = await tokenizer.peekBuffer(buffer, {
-			length: requiredLength,
+			position: clsidPosition,
+			length: 16,
 			mayBeLess: true
 		});
 
-		// Verify we read enough bytes
-		if (bytesRead < requiredLength) {
+		if (bytesRead < 16) {
 			return undefined;
 		}
 
@@ -97,7 +101,7 @@ export const detectCfbf: Detector = {
 		// Match against CLSID database
 		for (const record of CFBF_CLSIDS) {
 			const guid = getGuid(record.clsid)
-			if (guid.equals(buffer, clsidOffset)) {
+			if (guid.equals(buffer, 0)) {
 				return {
 					ext: record.ext,
 					mime: record.mime,
